@@ -3,44 +3,68 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Countdown to Birks by November</title>
+  <title>How long till Birks by November</title>
+  <meta name="theme-color" content="#FFC800" />
   <style>
     :root {
       color-scheme: light dark;
-      --bg: #0f172a;
-      --fg: #e2e8f0;
-      --muted: #94a3b8;
-      --accent: #22c55e;
+      --tarp-yellow: #FFC800;
+      --tarp-black: #000000;
+      --fg: #000000;
+      --muted: #333333;
+      --accent: #000000;
     }
+
     html, body { height: 100%; }
     body {
       margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 800px at 50% 10%, #111827, var(--bg));
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--tarp-yellow);
       color: var(--fg);
       display: grid;
       place-items: center;
+      text-align: center;
     }
-    .wrap { text-align: center; padding: 3rem 1.5rem; }
-    h1 { font-size: clamp(1.75rem, 3.5vw, 3rem); margin: 0 0 1rem; letter-spacing: 0.02em; }
-    p { margin: 0.25rem 0; color: var(--muted); }
-    .timer { display: grid; grid-auto-flow: column; gap: clamp(0.5rem, 2vw, 1rem); margin: 2rem 0; }
-    .cell { background: #0b1220; border: 1px solid #1f2937; border-radius: 1rem; padding: clamp(0.9rem, 2.5vw, 1.2rem) clamp(1.1rem, 3vw, 1.6rem); min-width: 95px; }
-    .num { font-variant-numeric: tabular-nums; font-size: clamp(1.8rem, 4.5vw, 3rem); font-weight: 700; line-height: 1; }
-    .lab { font-size: 0.9rem; margin-top: 0.4rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
-    .badge { display: inline-block; margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted); }
+
+    main { padding: 3rem 1.5rem; max-width: 960px; }
+
+    h1 {
+      font-size: clamp(1.75rem, 3.8vw, 3.2rem);
+      margin: 0 0 1rem;
+      letter-spacing: .01em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .kicker { font-size: .95rem; color: var(--muted); margin: 0 0 1rem; }
+
+    .timer { display: grid; grid-auto-flow: column; gap: clamp(.6rem, 2.5vw, 1.2rem); margin: 2rem 0; }
+    .cell {
+      background: #fff3cc;
+      border: 2px solid var(--fg);
+      border-radius: 1rem;
+      padding: clamp(.9rem, 2.5vw, 1.2rem) clamp(1.1rem, 3vw, 1.6rem);
+      min-width: 100px;
+    }
+
+    .num { font-variant-numeric: tabular-nums; font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1; }
+    .lab { font-size: .85rem; margin-top: .4rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+
+    .badge { display: inline-grid; grid-auto-flow: column; gap: .5rem; place-items: center; margin-top: .5rem; font-size: .95rem; color: var(--muted); }
     .tick { color: var(--accent); }
-    .footer { margin-top: 2rem; font-size: 0.9rem; color: var(--muted); }
-    @media (max-width: 560px) {
+
+    .footer { margin: 2rem 0 0; font-size: .95rem; color: var(--muted); }
+
+    @media (max-width: 640px) {
       .timer { grid-auto-flow: row; }
       .cell { min-width: 100%; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <h1>Countdown to 1 November</h1>
-    <p>Target timezone: <strong>Australia/Melbourne</strong></p>
+  <main>
+    <h1>How long till Birks by November</h1>
+    <p class="kicker">Target timezone: <strong>Australia/Melbourne</strong></p>
 
     <div class="timer" aria-live="polite" aria-atomic="true">
       <div class="cell"><div class="num" id="days">0</div><div class="lab">Days</div></div>
@@ -54,22 +78,21 @@
   </main>
 
   <script>
-    // Always count down to the next 1 November at 00:00 in Australia/Melbourne
     function targetDate() {
       const now = new Date();
-      const year = now.getFullYear();
-      // 1 Nov is during daylight saving in Victoria, usually UTC+11
-      let target = new Date(`${year}-11-01T00:00:00+11:00`);
+      const y = now.getFullYear();
+      let target = new Date(`${y}-11-01T00:00:00+11:00`);
       if (now.getTime() > target.getTime()) {
-        target = new Date(`${year + 1}-11-01T00:00:00+11:00`);
+        target = new Date(`${y + 1}-11-01T00:00:00+11:00`);
       }
       return target;
     }
 
     const $ = id => document.getElementById(id);
-    const footer = $('footer');
+    const footerEl = document.getElementById('footer');
     let tgt = targetDate();
-    footer.textContent = `Counting down to ${tgt.toLocaleString('en-AU', { timeZone: 'Australia/Melbourne', dateStyle: 'full', timeStyle: 'short' })}`;
+
+    footerEl.textContent = `Counting down to ${tgt.toLocaleString('en-AU', { timeZone: 'Australia/Melbourne', dateStyle: 'full', timeStyle: 'short' })}`;
 
     function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -89,7 +112,7 @@
 
       if (diff <= 0) {
         document.querySelector('h1').textContent = 'It is 1 November';
-        footer.textContent = 'Have a ripper day';
+        footerEl.textContent = 'Have a ripper day';
         clearInterval(timer);
       }
     }

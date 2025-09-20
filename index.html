@@ -10,19 +10,17 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9TZG1QJ9C"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag(){dataLayer.push(arguments);} 
     gtag('js', new Date());
     gtag('config', 'G-R9TZG1QJ9C');
   </script>
 
   <style>
     :root {
-      color-scheme: light dark;
       --tarp-yellow: #FFC800;
-      --tarp-black: #000000;
       --fg: #000000;
       --muted: #333333;
-      --accent: #000000;
+      --card: #fff3cc;
     }
 
     html, body { height: 100%; }
@@ -31,46 +29,53 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
       background: var(--tarp-yellow);
       color: var(--fg);
+      min-height: 100dvh;
+      padding: calc(env(safe-area-inset-top, 0) + 16px) 16px calc(env(safe-area-inset-bottom, 0) + 24px);
       display: grid;
-      place-items: center;
+      place-items: start center;
       text-align: center;
     }
 
-    main { padding: 3rem 1.5rem; max-width: 960px; }
+    main { width: 100%; max-width: 680px; }
 
     h1 {
-      font-size: clamp(1.75rem, 3.8vw, 3.2rem);
-      margin: 0 0 1rem;
+      font-size: clamp(2rem, 6vw, 3rem);
+      margin: 0 0 .75rem;
       letter-spacing: .01em;
       font-weight: 900;
       text-transform: uppercase;
+      text-wrap: balance;
     }
 
-    .kicker { font-size: .95rem; color: var(--muted); margin: 0 0 1rem; }
+    .kicker { font-size: .95rem; color: var(--muted); margin: 0 0 .75rem; }
 
-    .timer { display: grid; grid-auto-flow: column; gap: clamp(.6rem, 2.5vw, 1.2rem); margin: 2rem 0; }
+    /* Mobile-first timer */
+    .timer { display: grid; gap: 14px; margin: 1.25rem 0 1.5rem; }
     .cell {
-      background: #fff3cc;
+      background: var(--card);
       border: 2px solid var(--fg);
-      border-radius: 1rem;
-      padding: clamp(.9rem, 2.5vw, 1.2rem) clamp(1.1rem, 3vw, 1.6rem);
-      min-width: 100px;
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 6px 0 rgba(0,0,0,.25);
+    }
+    .num { font-variant-numeric: tabular-nums; font-size: clamp(2.25rem, 8vw, 3.25rem); font-weight: 900; line-height: 1; }
+    .lab { font-size: 1rem; margin-top: .35rem; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+
+    /* Larger screens show cells in a row */
+    @media (min-width: 720px) {
+      .timer { grid-auto-flow: column; }
+      .cell { min-width: 120px; }
     }
 
-    .num { font-variant-numeric: tabular-nums; font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1; }
-    .lab { font-size: .85rem; margin-top: .4rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
-
-    .badge { display: inline-grid; grid-auto-flow: column; gap: .5rem; place-items: center; margin-top: .5rem; font-size: .95rem; color: var(--muted); }
-    .tick { color: var(--accent); }
-
-    .credit { margin-top: 3rem; font-size: .85rem; color: var(--fg); font-weight: 600; }
-
-    .video { margin-top: 2rem; }
-
-    @media (max-width: 640px) {
-      .timer { grid-auto-flow: row; }
-      .cell { min-width: 100%; }
+    /* Responsive YouTube embed */
+    .video { margin-top: 1.25rem; }
+    .video .frame {
+      position: relative; width: 100%; aspect-ratio: 16 / 9; border: 2px solid var(--fg); border-radius: 16px; overflow: hidden; background: #000;
     }
+    .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    .credit { margin-top: 20px; font-size: .9rem; font-weight: 700; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
   </style>
 </head>
 <body>
@@ -85,10 +90,11 @@
       <div class="cell"><div class="num" id="secs">0</div><div class="lab">Seconds</div></div>
     </div>
 
-    <p class="badge">Ticking toward midnight, 1 November, Melbourne time <span class="tick">✓</span></p>
-
-    <div class="video">
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/WvDnRS448RI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div class="video" aria-labelledby="vidtitle">
+      <span id="vidtitle" class="sr-only">Embedded YouTube video</span>
+      <div class="frame">
+        <iframe src="https://www.youtube.com/embed/WvDnRS448RI" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
     </div>
 
     <p class="credit">Built by Charles</p>
@@ -99,9 +105,7 @@
       const now = new Date();
       const y = now.getFullYear();
       let target = new Date(`${y}-11-01T00:00:00+11:00`);
-      if (now.getTime() > target.getTime()) {
-        target = new Date(`${y + 1}-11-01T00:00:00+11:00`);
-      }
+      if (now.getTime() > target.getTime()) target = new Date(`${y + 1}-11-01T00:00:00+11:00`);
       return target;
     }
 

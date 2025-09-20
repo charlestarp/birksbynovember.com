@@ -74,7 +74,6 @@
     </div>
 
     <p class="badge">Ticking toward midnight, 1 November, Melbourne time <span class="tick">✓</span></p>
-    <div class="footer" id="footer"></div>
   </main>
 
   <script>
@@ -89,10 +88,7 @@
     }
 
     const $ = id => document.getElementById(id);
-    const footerEl = document.getElementById('footer');
     let tgt = targetDate();
-
-    footerEl.textContent = `Counting down to ${tgt.toLocaleString('en-AU', { timeZone: 'Australia/Melbourne', dateStyle: 'full', timeStyle: 'short' })}`;
 
     function pad(n) { return String(n).padStart(2, '0'); }
 
@@ -112,7 +108,6 @@
 
       if (diff <= 0) {
         document.querySelector('h1').textContent = 'It is 1 November';
-        footerEl.textContent = 'Have a ripper day';
         clearInterval(timer);
       }
     }

@@ -73,7 +73,7 @@
 
     .credit { margin-top: 20px; font-size: .9rem; font-weight: 700; }
 
-    /* Toggle button, very obvious on mobile */
+    /* Toggle button styling */
     #toggle-audio {
       position: fixed;
       right: 16px;
@@ -92,8 +92,14 @@
     #toggle-audio:active { transform: translateY(2px); }
     #toggle-audio:hover { background: #ffe670; }
 
-    /* Mobile prominence */
+    /* Extra scroll space for mobile */
     @media (max-width: 720px) {
+      body::after {
+        content: "";
+        display: block;
+        height: 4.5rem; /* ~4 lines of text worth of space */
+      }
+
       #toggle-audio {
         left: 16px;
         right: 16px;
@@ -179,17 +185,14 @@
     const toggleBtn = document.getElementById('toggle-audio');
     audioEl.volume = 0.4;
 
-    // Try autoplay. If blocked, reveal the control as Play.
-    audioEl.play().then(() => {
-      // Autoplay succeeded, keep button hidden. User can still use media keys.
-    }).catch(() => {
-      // Autoplay blocked, show prominent Play button.
+    // Try autoplay; if blocked, reveal Play button.
+    audioEl.play().catch(() => {
       toggleBtn.style.display = 'inline-block';
       toggleBtn.textContent = '▶ Play theme';
       toggleBtn.setAttribute('aria-pressed', 'false');
     });
 
-    // Toggle behaviour. Once pressed the first time, keep the button visible for pause.
+    // Toggle Play/Pause
     toggleBtn.addEventListener('click', () => {
       if (audioEl.paused) {
         audioEl.play().then(() => {
@@ -203,11 +206,12 @@
       }
     });
 
-    // Also update label when playback changes by other means.
     audioEl.addEventListener('play', () => {
+      toggleBtn.style.display = 'inline-block';
       toggleBtn.textContent = '⏸ Pause theme';
       toggleBtn.setAttribute('aria-pressed', 'true');
     });
+
     audioEl.addEventListener('pause', () => {
       toggleBtn.textContent = '▶ Play theme';
       toggleBtn.setAttribute('aria-pressed', 'false');

@@ -73,23 +73,35 @@
 
     .credit { margin-top: 20px; font-size: .9rem; font-weight: 700; }
 
-    /* Pause/Play button styling */
+    /* Toggle button, very obvious on mobile */
     #toggle-audio {
       position: fixed;
-      bottom: 16px;
       right: 16px;
+      bottom: 16px;
       background: var(--card);
       border: 2px solid var(--fg);
-      border-radius: 12px;
-      padding: 10px 16px;
-      font-weight: bold;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-weight: 800;
+      box-shadow: 0 6px 0 rgba(0,0,0,.25);
       cursor: pointer;
       z-index: 50;
+      display: none;
+      transition: transform .06s ease;
     }
+    #toggle-audio:active { transform: translateY(2px); }
+    #toggle-audio:hover { background: #ffe670; }
 
-    #toggle-audio:hover {
-      background: #ffe670;
+    /* Mobile prominence */
+    @media (max-width: 720px) {
+      #toggle-audio {
+        left: 16px;
+        right: 16px;
+        width: auto;
+        min-height: 52px;
+        font-size: 1rem;
+        padding: 14px 18px;
+      }
     }
 
     .sr-only { 
@@ -117,12 +129,12 @@
       </div>
     </div>
 
-    <p class="credit">Built by Charles</p>
+    <p class="credit">Built by Charles. But all Copyright remains Toni and Ryan, as he was working when he built it.</p>
   </main>
 
   <!-- Background music -->
-  <audio id="bgm" src="BIRKS BY NOVEMBER_v1.mp3" preload="auto" loop></audio>
-  <button id="toggle-audio">⏸ Pause theme</button>
+  <audio id="bgm" src="BIRKS BY NOVEMBER_v1.mp3" preload="metadata" loop></audio>
+  <button id="toggle-audio" aria-pressed="false" aria-label="Play or pause site theme">▶ Play theme</button>
 
   <script>
     // Countdown timer
@@ -162,24 +174,43 @@
     const timer = setInterval(render, 1000);
     render();
 
-    // Audio autoplay and toggle button
+    // Audio bootstrap with graceful fallback
     const audioEl = document.getElementById('bgm');
     const toggleBtn = document.getElementById('toggle-audio');
     audioEl.volume = 0.4;
 
-    // Try to autoplay immediately
-    audioEl.play().catch(() => {
-      console.warn("Autoplay blocked: will play after user interaction.");
+    // Try autoplay. If blocked, reveal the control as Play.
+    audioEl.play().then(() => {
+      // Autoplay succeeded, keep button hidden. User can still use media keys.
+    }).catch(() => {
+      // Autoplay blocked, show prominent Play button.
+      toggleBtn.style.display = 'inline-block';
+      toggleBtn.textContent = '▶ Play theme';
+      toggleBtn.setAttribute('aria-pressed', 'false');
     });
 
+    // Toggle behaviour. Once pressed the first time, keep the button visible for pause.
     toggleBtn.addEventListener('click', () => {
       if (audioEl.paused) {
-        audioEl.play();
-        toggleBtn.textContent = '⏸ Pause theme';
+        audioEl.play().then(() => {
+          toggleBtn.textContent = '⏸ Pause theme';
+          toggleBtn.setAttribute('aria-pressed', 'true');
+        });
       } else {
         audioEl.pause();
         toggleBtn.textContent = '▶ Play theme';
+        toggleBtn.setAttribute('aria-pressed', 'false');
       }
+    });
+
+    // Also update label when playback changes by other means.
+    audioEl.addEventListener('play', () => {
+      toggleBtn.textContent = '⏸ Pause theme';
+      toggleBtn.setAttribute('aria-pressed', 'true');
+    });
+    audioEl.addEventListener('pause', () => {
+      toggleBtn.textContent = '▶ Play theme';
+      toggleBtn.setAttribute('aria-pressed', 'false');
     });
   </script>
 </body>

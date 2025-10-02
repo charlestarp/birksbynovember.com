@@ -73,8 +73,8 @@
 
     .credit { margin-top: 20px; font-size: .9rem; font-weight: 700; }
 
-    /* Play button styling */
-    #play-audio {
+    /* Pause/Play button styling */
+    #toggle-audio {
       position: fixed;
       bottom: 16px;
       right: 16px;
@@ -85,11 +85,10 @@
       font-weight: bold;
       box-shadow: 0 4px 0 rgba(0,0,0,0.25);
       cursor: pointer;
-      display: none;
       z-index: 50;
     }
 
-    #play-audio:hover {
+    #toggle-audio:hover {
       background: #ffe670;
     }
 
@@ -118,12 +117,12 @@
       </div>
     </div>
 
-    <p class="credit">Built by Charles. CC Toni and Ryan</p>
+    <p class="credit">Built by Charles</p>
   </main>
 
   <!-- Background music -->
-  <audio id="bgm" src="BIRKS BY NOVEMBER_v1.mp3" preload="metadata" loop></audio>
-  <button id="play-audio">▶ Play theme</button>
+  <audio id="bgm" src="BIRKS BY NOVEMBER_v1.mp3" preload="auto" loop></audio>
+  <button id="toggle-audio">⏸ Pause theme</button>
 
   <script>
     // Countdown timer
@@ -163,35 +162,25 @@
     const timer = setInterval(render, 1000);
     render();
 
-    // Audio autoplay and fallback button
+    // Audio autoplay and toggle button
     const audioEl = document.getElementById('bgm');
-    const playBtn = document.getElementById('play-audio');
+    const toggleBtn = document.getElementById('toggle-audio');
     audioEl.volume = 0.4;
 
-    function tryAutoplay() {
-      audioEl.play().catch(() => {
-        playBtn.style.display = 'inline-block';
-      });
-    }
-
-    function enableOnFirstGesture() {
-      const start = () => {
-        audioEl.play().then(() => {
-          playBtn.style.display = 'none';
-          window.removeEventListener('pointerdown', start);
-          window.removeEventListener('keydown', start);
-        });
-      };
-      window.addEventListener('pointerdown', start, { once: true });
-      window.addEventListener('keydown', start, { once: true });
-    }
-
-    playBtn.addEventListener('click', () => {
-      audioEl.play().then(() => playBtn.style.display = 'none');
+    // Try to autoplay immediately
+    audioEl.play().catch(() => {
+      console.warn("Autoplay blocked: will play after user interaction.");
     });
 
-    tryAutoplay();
-    enableOnFirstGesture();
+    toggleBtn.addEventListener('click', () => {
+      if (audioEl.paused) {
+        audioEl.play();
+        toggleBtn.textContent = '⏸ Pause theme';
+      } else {
+        audioEl.pause();
+        toggleBtn.textContent = '▶ Play theme';
+      }
+    });
   </script>
 </body>
 </html>

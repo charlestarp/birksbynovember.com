@@ -49,7 +49,6 @@
 
     .kicker { font-size: .95rem; color: var(--muted); margin: 0 0 .75rem; }
 
-    /* Mobile-first timer */
     .timer { display: grid; gap: 14px; margin: 1.25rem 0 1.5rem; }
     .cell {
       background: var(--card);
@@ -61,13 +60,11 @@
     .num { font-variant-numeric: tabular-nums; font-size: clamp(2.25rem, 8vw, 3.25rem); font-weight: 900; line-height: 1; }
     .lab { font-size: 1rem; margin-top: .35rem; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
 
-    /* Larger screens show cells in a row */
     @media (min-width: 720px) {
       .timer { grid-auto-flow: column; }
       .cell { min-width: 120px; }
     }
 
-    /* Responsive YouTube embed */
     .video { margin-top: 1.25rem; }
     .video .frame {
       position: relative; width: 100%; aspect-ratio: 16 / 9; border: 2px solid var(--fg); border-radius: 16px; overflow: hidden; background: #000;
@@ -75,7 +72,31 @@
     .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
 
     .credit { margin-top: 20px; font-size: .9rem; font-weight: 700; }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* Play button styling */
+    #play-audio {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: var(--card);
+      border: 2px solid var(--fg);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-weight: bold;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+      cursor: pointer;
+      display: none;
+      z-index: 50;
+    }
+
+    #play-audio:hover {
+      background: #ffe670;
+    }
+
+    .sr-only { 
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; 
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; 
+    }
   </style>
 </head>
 <body>
@@ -97,10 +118,15 @@
       </div>
     </div>
 
-    <p class="credit">Built by Charles</p>
+    <p class="credit">Built by Charles. CC Toni and Ryan</p>
   </main>
 
+  <!-- Background music -->
+  <audio id="bgm" src="BIRKS BY NOVEMBER_v1.mp3" preload="metadata" loop></audio>
+  <button id="play-audio">▶ Play theme</button>
+
   <script>
+    // Countdown timer
     function targetDate() {
       const now = new Date();
       const y = now.getFullYear();
@@ -136,6 +162,36 @@
 
     const timer = setInterval(render, 1000);
     render();
+
+    // Audio autoplay and fallback button
+    const audioEl = document.getElementById('bgm');
+    const playBtn = document.getElementById('play-audio');
+    audioEl.volume = 0.4;
+
+    function tryAutoplay() {
+      audioEl.play().catch(() => {
+        playBtn.style.display = 'inline-block';
+      });
+    }
+
+    function enableOnFirstGesture() {
+      const start = () => {
+        audioEl.play().then(() => {
+          playBtn.style.display = 'none';
+          window.removeEventListener('pointerdown', start);
+          window.removeEventListener('keydown', start);
+        });
+      };
+      window.addEventListener('pointerdown', start, { once: true });
+      window.addEventListener('keydown', start, { once: true });
+    }
+
+    playBtn.addEventListener('click', () => {
+      audioEl.play().then(() => playBtn.style.display = 'none');
+    });
+
+    tryAutoplay();
+    enableOnFirstGesture();
   </script>
 </body>
 </html>

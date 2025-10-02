@@ -77,7 +77,7 @@
       font-weight: 700; 
     }
 
-    /* Play or Pause button, fixed so it follows as you scroll */
+    /* Play/Pause button */
     #toggle-audio {
       position: fixed;
       right: 16px;
@@ -96,12 +96,12 @@
     #toggle-audio:active { transform: translateY(2px); }
     #toggle-audio:hover { background: #ffe670; }
 
-    /* Add large scroll space for mobile */
+    /* MASSIVE scroll space for testing */
     @media (max-width: 720px) {
       body::after {
         content: "";
         display: block;
-        height: calc(240px + env(safe-area-inset-bottom, 0px)); /* doubles the previous space */
+        height: calc(800px + env(safe-area-inset-bottom, 0px)); /* huge space */
       }
       #toggle-audio {
         left: 16px;

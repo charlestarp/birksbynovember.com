@@ -71,13 +71,9 @@
     }
     .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-    .credit { 
-      margin-top: 20px; 
-      font-size: .9rem; 
-      font-weight: 700; 
-    }
+    .credit { margin-top: 20px; font-size: .9rem; font-weight: 700; }
 
-    /* Play/Pause button */
+    /* Play or Pause button, fixed so it follows as you scroll */
     #toggle-audio {
       position: fixed;
       right: 16px;
@@ -96,12 +92,13 @@
     #toggle-audio:active { transform: translateY(2px); }
     #toggle-audio:hover { background: #ffe670; }
 
-    /* MASSIVE scroll space for testing */
+    /* Giant spacer only on mobile to guarantee extra scroll room */
+    .spacer { display: none; }
     @media (max-width: 720px) {
-      body::after {
-        content: "";
+      .spacer {
         display: block;
-        height: calc(800px + env(safe-area-inset-bottom, 0px)); /* huge space */
+        height: calc(1000px + env(safe-area-inset-bottom, 0px)); /* heaps of space */
+        width: 100%;
       }
       #toggle-audio {
         left: 16px;
@@ -139,6 +136,9 @@
     </div>
 
     <p class="credit">Built by Charles. But all Copyright remains Toni and Ryan, as he was working when he built it.</p>
+
+    <!-- Real spacer element to force extra scroll on mobile -->
+    <div class="spacer" aria-hidden="true"></div>
   </main>
 
   <!-- Background music -->

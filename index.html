@@ -73,7 +73,6 @@
 
     .credit { margin-top: 20px; font-size: .9rem; font-weight: 700; }
 
-    /* Play or Pause button, fixed so it follows as you scroll */
     #toggle-audio {
       position: fixed;
       right: 16px;
@@ -92,12 +91,11 @@
     #toggle-audio:active { transform: translateY(2px); }
     #toggle-audio:hover { background: #ffe670; }
 
-    /* Giant spacer only on mobile to guarantee extra scroll room */
     .spacer { display: none; }
     @media (max-width: 720px) {
       .spacer {
         display: block;
-        height: calc(1000px + env(safe-area-inset-bottom, 0px)); /* heaps of space */
+        height: calc(250px + env(safe-area-inset-bottom, 0px)); /* one quarter of before */
         width: 100%;
       }
       #toggle-audio {
@@ -137,16 +135,13 @@
 
     <p class="credit">Built by Charles. But all Copyright remains Toni and Ryan, as he was working when he built it.</p>
 
-    <!-- Real spacer element to force extra scroll on mobile -->
     <div class="spacer" aria-hidden="true"></div>
   </main>
 
-  <!-- Background music -->
   <audio id="bgm" src="BIRKS BY NOVEMBER_v1.mp3" preload="metadata" loop></audio>
   <button id="toggle-audio" aria-pressed="false" aria-label="Play or pause site theme">▶ Play theme</button>
 
   <script>
-    // Countdown timer
     function targetDate() {
       const now = new Date();
       const y = now.getFullYear();
@@ -183,12 +178,10 @@
     const timer = setInterval(render, 1000);
     render();
 
-    // Audio playback toggle
     const audioEl = document.getElementById('bgm');
     const toggleBtn = document.getElementById('toggle-audio');
     audioEl.volume = 0.4;
 
-    // Try autoplay, show button if blocked
     audioEl.play().catch(() => {
       toggleBtn.style.display = 'inline-block';
       toggleBtn.textContent = '▶ Play theme';

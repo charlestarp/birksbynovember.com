@@ -73,6 +73,7 @@
 
     .credit { margin-top: 20px; font-size: .9rem; font-weight: 700; }
 
+    /* Play/Pause button */
     #toggle-audio {
       position: fixed;
       right: 16px;
@@ -91,11 +92,12 @@
     #toggle-audio:active { transform: translateY(2px); }
     #toggle-audio:hover { background: #ffe670; }
 
+    /* Spacer for scroll on mobile */
     .spacer { display: none; }
     @media (max-width: 720px) {
       .spacer {
         display: block;
-        height: calc(250px + env(safe-area-inset-bottom, 0px)); /* one quarter of before */
+        height: calc(125px + env(safe-area-inset-bottom, 0px)); /* half the previous space */
         width: 100%;
       }
       #toggle-audio {

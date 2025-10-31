@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>How long till Birks by November</title>
+  <title>Birks have been put on</title>
   <meta name="theme-color" content="#FFC800" />
 
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-R9TZG1QJ9C"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -39,31 +38,15 @@
     main { width: 100%; max-width: 680px; }
 
     h1 {
-      font-size: clamp(2rem, 6vw, 3rem);
+      font-size: clamp(2.5rem, 8vw, 4rem);
       margin: 0 0 .75rem;
-      letter-spacing: .01em;
-      font-weight: 900;
+      letter-spacing: .02em;
+      font-weight: 1000;
       text-transform: uppercase;
       text-wrap: balance;
     }
 
     .kicker { font-size: .95rem; color: var(--muted); margin: 0 0 .75rem; }
-
-    .timer { display: grid; gap: 14px; margin: 1.25rem 0 1.5rem; }
-    .cell {
-      background: var(--card);
-      border: 2px solid var(--fg);
-      border-radius: 16px;
-      padding: 16px 18px;
-      box-shadow: 0 6px 0 rgba(0,0,0,.25);
-    }
-    .num { font-variant-numeric: tabular-nums; font-size: clamp(2.25rem, 8vw, 3.25rem); font-weight: 900; line-height: 1; }
-    .lab { font-size: 1rem; margin-top: .35rem; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
-
-    @media (min-width: 720px) {
-      .timer { grid-auto-flow: column; }
-      .cell { min-width: 120px; }
-    }
 
     .video { margin-top: 1.25rem; }
     .video .frame {
@@ -73,7 +56,6 @@
 
     .credit { margin-top: 20px; font-size: .9rem; font-weight: 700; }
 
-    /* Play/Pause button */
     #toggle-audio {
       position: fixed;
       right: 16px;
@@ -92,12 +74,11 @@
     #toggle-audio:active { transform: translateY(2px); }
     #toggle-audio:hover { background: #ffe670; }
 
-    /* Spacer for scroll on mobile */
     .spacer { display: none; }
     @media (max-width: 720px) {
       .spacer {
         display: block;
-        height: calc(125px + env(safe-area-inset-bottom, 0px)); /* half the previous space */
+        height: calc(125px + env(safe-area-inset-bottom, 0px));
         width: 100%;
       }
       #toggle-audio {
@@ -118,20 +99,13 @@
 </head>
 <body>
   <main>
-    <h1>How long till Birks by November</h1>
+    <h1>Birks have been put on</h1>
     <p class="kicker">Target timezone: <strong>Australia/Melbourne</strong></p>
-
-    <div class="timer" aria-live="polite" aria-atomic="true">
-      <div class="cell"><div class="num" id="days">0</div><div class="lab">Days</div></div>
-      <div class="cell"><div class="num" id="hours">0</div><div class="lab">Hours</div></div>
-      <div class="cell"><div class="num" id="mins">0</div><div class="lab">Minutes</div></div>
-      <div class="cell"><div class="num" id="secs">0</div><div class="lab">Seconds</div></div>
-    </div>
 
     <div class="video" aria-labelledby="vidtitle">
       <span id="vidtitle" class="sr-only">Embedded YouTube video</span>
       <div class="frame">
-        <iframe src="https://www.youtube.com/embed/WvDnRS448RI" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/UJQV3B6vc70" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
 
@@ -144,42 +118,6 @@
   <button id="toggle-audio" aria-pressed="false" aria-label="Play or pause site theme">▶ Play theme</button>
 
   <script>
-    function targetDate() {
-      const now = new Date();
-      const y = now.getFullYear();
-      let target = new Date(`${y}-11-01T00:00:00+11:00`);
-      if (now.getTime() > target.getTime()) target = new Date(`${y + 1}-11-01T00:00:00+11:00`);
-      return target;
-    }
-
-    const $ = id => document.getElementById(id);
-    let tgt = targetDate();
-
-    function pad(n) { return String(n).padStart(2, '0'); }
-
-    function render() {
-      const now = new Date();
-      const diff = Math.max(0, tgt.getTime() - now.getTime());
-      const s = Math.floor(diff / 1000);
-      const days = Math.floor(s / 86400);
-      const hours = Math.floor((s % 86400) / 3600);
-      const mins = Math.floor((s % 3600) / 60);
-      const secs = s % 60;
-
-      $('days').textContent = days;
-      $('hours').textContent = pad(hours);
-      $('mins').textContent = pad(mins);
-      $('secs').textContent = pad(secs);
-
-      if (diff <= 0) {
-        document.querySelector('h1').textContent = 'It is 1 November';
-        clearInterval(timer);
-      }
-    }
-
-    const timer = setInterval(render, 1000);
-    render();
-
     const audioEl = document.getElementById('bgm');
     const toggleBtn = document.getElementById('toggle-audio');
     audioEl.volume = 0.4;
